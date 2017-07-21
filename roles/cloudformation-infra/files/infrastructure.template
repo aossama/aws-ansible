@@ -198,10 +198,10 @@
       "Type": "AWS::Route53::HostedZone",
       "Properties": {
         "Name": { "Ref": "Route53HostedZone" },
-        "VPCs": {
+        "VPCs": [{
           "VPCId" : { "Ref": "VPC" },
           "VPCRegion" : { "Ref": "AWS::Region" }
-        }
+        }]
       }
     },
 
@@ -227,10 +227,7 @@
     "InternetGateway" : {
       "Type" : "AWS::EC2::InternetGateway",
       "Properties" : {
-        "Tags" : [ {
-          "Key" : "Application",
-          "Value" : {"Fn::Join" : ["", [{"Ref" : "AWS::StackName"}, "-igw"]]}
-        } ]
+        "Tags" : [{ "Key" : "Application", "Value" : {"Fn::Join" : ["", [{"Ref" : "AWS::StackName"}, "-igw"]]} }]
       }
     },
 
@@ -306,7 +303,7 @@
         "AvailabilityZone": {"Fn::Select": ["1", { "Fn::GetAZs" : "" }]},
         "MapPublicIpOnLaunch": "true",
         "Tags" : [
-          { "Key" : "Name", "Value" : {"Fn::Join" : ["", [{"Ref" : "AWS::StackName"}, "-public-subnet1"]]} },
+          { "Key" : "Name", "Value" : {"Fn::Join" : ["", [{"Ref" : "AWS::StackName"}, "-public-subnet2"]]} },
           { "Key" : "Network", "Value" : "Public" }
         ]
       }
@@ -329,7 +326,7 @@
         "AvailabilityZone": {"Fn::Select": ["2", { "Fn::GetAZs" : "" }]},
         "MapPublicIpOnLaunch": "true",
         "Tags" : [
-          { "Key" : "Name", "Value" : {"Fn::Join" : ["", [{"Ref" : "AWS::StackName"}, "-public-subnet1"]]} },
+          { "Key" : "Name", "Value" : {"Fn::Join" : ["", [{"Ref" : "AWS::StackName"}, "-public-subnet3"]]} },
           { "Key" : "Network", "Value" : "Public" }
         ]
       }
@@ -338,7 +335,7 @@
     "PublicSubnet3RouteTableAssociation" : {
       "Type" : "AWS::EC2::SubnetRouteTableAssociation",
       "Properties" : {
-        "SubnetId" : {"Ref" : "PublicSubnet1"},
+        "SubnetId" : {"Ref" : "PublicSubnet3"},
         "RouteTableId" : {"Ref" : "PublicRouteTable"}
       }
     },
@@ -373,7 +370,7 @@
         "CidrBlock": {"Fn::Select": ["4", { "Ref": "SubnetCidrBlocks" }]},
         "AvailabilityZone": {"Fn::Select": ["1", { "Fn::GetAZs" : "" }]},
         "Tags" : [
-          { "Key" : "Name", "Value" : {"Fn::Join" : ["", [{"Ref" : "AWS::StackName"}, "-private-subnet1"]]} },
+          { "Key" : "Name", "Value" : {"Fn::Join" : ["", [{"Ref" : "AWS::StackName"}, "-private-subnet2"]]} },
           { "Key" : "Network", "Value" : "Private" }
         ]
       }
@@ -395,7 +392,7 @@
         "CidrBlock": {"Fn::Select": ["5", { "Ref": "SubnetCidrBlocks" }]},
         "AvailabilityZone": {"Fn::Select": ["2", { "Fn::GetAZs" : "" }]},
         "Tags" : [
-          { "Key" : "Name", "Value" : {"Fn::Join" : ["", [{"Ref" : "AWS::StackName"}, "-private-subnet1"]]} },
+          { "Key" : "Name", "Value" : {"Fn::Join" : ["", [{"Ref" : "AWS::StackName"}, "-private-subnet3"]]} },
           { "Key" : "Network", "Value" : "Private" }
         ]
       }
@@ -404,8 +401,25 @@
     "PrivateSubnet3RouteTableAssociation" : {
       "Type" : "AWS::EC2::SubnetRouteTableAssociation",
       "Properties" : {
-        "SubnetId" : {"Ref" : "PrivateSubnet1"},
+        "SubnetId" : {"Ref" : "PrivateSubnet3"},
         "RouteTableId" : {"Ref" : "PrivateRouteTable"}
+      }
+    },
+
+    "BastionSecurityGroup": {
+      "Type": "AWS::EC2::SecurityGroup",
+      "Properties": {
+        "GroupDescription": "bastion-sg",
+        "VpcId": { "Ref": "VPC" },
+        "Tags": [ {"Key": "Name", "Value": "bastion_sg"} ],
+        "SecurityGroupIngress": [
+          {
+            "IpProtocol": "tcp",
+            "FromPort": "22",
+            "ToPort": "22",
+            "CidrIp": "0.0.0.0/0"
+          }
+        ]
       }
     }
   },
