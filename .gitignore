@@ -15,3 +15,7 @@ ansible.log
 .tox
 static-inventory
 *.retry
+
+venv
+.env
+env

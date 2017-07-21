@@ -1,0 +1,11 @@
+---
+# AWS instance specific configuration
+bastion_instance_type: t2.micro
+emptydir_storage: "50"
+vpc_prefix: "multi-az-vpc-{{ stack_name }}"
+public_subnet_prefix: Ansible-Public-Subnet
+private_subnet_prefix: Ansible-Private-Subnet
+cidr_block: 10.20.0.0/16
+subnet_blocks: 10.20.1.0/24,10.20.2.0/24,10.20.3.0/24,10.20.4.0/24,10.20.5.0/24,10.20.6.0/24
+byo_bastion: no
+host_up_time: 80
