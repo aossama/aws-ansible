@@ -1,0 +1,17 @@
+*~
+#*#
+.idea
+*.komodoproject
+.loadpath
+.project
+*.pyc
+.pydevproject
+*.pyo
+*.redcar*
+.*.swp
+.vagrant
+.tags*
+ansible.log
+.tox
+static-inventory
+*.retry
